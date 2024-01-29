@@ -5,10 +5,10 @@ import subprocess
 import multiprocessing
 from typing import TYPE_CHECKING, Any, List, Tuple
 
-from agentverse.logging import get_logger
+from agentverse.logging_ import get_logger
 from agentverse.agents import ExecutorAgent
 from agentverse.message import ExecutorMessage, SolverMessage
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 
 from . import BaseExecutor, executor_registry
 

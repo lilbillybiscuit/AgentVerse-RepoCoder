@@ -1,6 +1,6 @@
 from typing import NamedTuple, Union
 from enum import Enum
-
+import re
 import abc
 
 
@@ -34,6 +34,9 @@ class AGENT_TYPES(Enum):
     EXECUTION = 3
     EVALUATION = 4
     MANAGER = 5
+    DRIVER = 6
+    NAVIGATOR = 7
+    TESTER = 8
 
     @staticmethod
     def from_string(agent_type: str):
@@ -44,6 +47,9 @@ class AGENT_TYPES(Enum):
             "executor": AGENT_TYPES.EXECUTION,
             "evaluator": AGENT_TYPES.EVALUATION,
             "manager": AGENT_TYPES.MANAGER,
+            "driver": AGENT_TYPES.DRIVER,
+            "navigator": AGENT_TYPES.NAVIGATOR,
+            "tester": AGENT_TYPES.TESTER
         }
         assert (
             agent_type in str_to_enum_dict
@@ -63,3 +69,13 @@ class Singleton(abc.ABCMeta, type):
         if cls not in cls._instances:
             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
+
+def extract_id_number(input_string):
+    pattern = r'<ID (\d+)>'
+    match = re.search(pattern, input_string)
+    
+    if match:
+        id_number = match.group(1)
+        return id_number
+    else:
+        return None

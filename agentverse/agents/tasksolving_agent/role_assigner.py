@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 from colorama import Fore
 
-from agentverse.logging import get_logger
+from agentverse.logging_ import get_logger
 import bdb
 from string import Template
 from typing import TYPE_CHECKING, List

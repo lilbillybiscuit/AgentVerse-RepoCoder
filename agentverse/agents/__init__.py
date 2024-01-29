@@ -19,3 +19,7 @@ from agentverse.agents.tasksolving_agent.evaluator import EvaluatorAgent
 from agentverse.agents.tasksolving_agent.solver import SolverAgent
 from agentverse.agents.tasksolving_agent.manager import ManagerAgent
 from agentverse.agents.tasksolving_agent.executor import ExecutorAgent
+
+from agentverse.agents.coderagent.navigator import NavigatorAgent
+from agentverse.agents.coderagent.driver import DriverAgent
+

@@ -7,7 +7,7 @@ from agentverse.agents.simulation_agent.conversation import BaseAgent
 # from agentverse.environments.simulation_env.rules.base import Rule
 from agentverse.environments.simulation_env.rules.base import SimulationRule as Rule
 from agentverse.message import Message
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 
 from .. import env_registry as EnvironmentRegistry
 from ..base import BaseEnvironment

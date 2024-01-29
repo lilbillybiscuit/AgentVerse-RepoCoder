@@ -1,0 +1,120 @@
+cnt_agents: &cnt_agents 2
+max_turn: &max_turn 5
+max_criticizing_rounds: 3
+
+prompts:
+  navigator_planning_prepend_prompt: &navigator_planning_prepend_prompt |-
+    # Role Description
+    You are the navigator of a pair-programming group. You are facing a repository-level multi-masking code completion task. Now you are in the stage of:
+    ${stage_description}
+
+  navigator_planning_append_prompt: &navigator_planning_append_prompt |-
+    Here is a multi-mask code completion task. You should decide which mask to be filled first. No narration.
+    ${code_input}
+    You should respond in the format of `<ID #>` where # is the chosen mask to be completed first. You should not choose completed masks.
+
+  navigator_critic_prepend_prompt: &navigator_critic_prepend_prompt |-
+    # Role Description
+    You are the navigator of a pair-programming group. You are facing a repository-level multi-masking code completion task. Now you are in the stage of:
+    ${stage_description}
+ 
+  navigator_critic_append_prompt: &navigator_critic_append_prompt |-
+    Your partner, the driver, have given a completion of a mask.
+    ${code_input}
+    Completion: ${former_completion}
+    Evaluate the completion. If you believe it is accurate, reply directly with "correct". Alternatively, if you identify any issues with the completion, kindly specify the problem and provide guidance on how to address it. In your advice, you should generate correct indent spaces so that the code can run correctly when replacing the <MASK> with the completed code. 
+
+  navigator_test_prepend_prompt: &navigator_test_prepend_prompt |-
+    # Role Description
+    You are the navigator of a pair-programming group. You are facing a repository-level multi-masking code completion task. Now you are in the stage of:
+    ${stage_description}
+
+  navigator_test_append_prompt: &navigator_test_append_prompt |-
+    Your partner, the driver, have given a completion of a mask.
+    ${code_input}
+    Completion: ${former_completion}
+    Now take the role of a unit test code generator. You can generate executable code. According to the function description, 
+    generate more than 10 representative test examples, with the function Description: {function_description}. Generate executable test code to test the function named {function_name}.
+
+  driver_prepend_prompt: &driver_prepend_prompt |-
+    # Role Description
+    You are the driver of a pair-programming group. You are facing a repository-level multi-masking code completion task. Now you are in the stage of:
+    ${stage_description}
+    You should not generate long code. Only generate one statement or one api call. You should generate correct indent spaces so that the code can run correctly when replacing the <MASK> with the completed code. 
+  
+  driver_append_prompt: &driver_append_prompt |-
+    One line of code or one api call is masked. Can you complete the masked code? You can refer to retrieved code from other files in the repository. Your former completion: ${former_completion}. The feedback from your navigator partner: ${feedback}.
+    ```python
+    ${code_input}
+    ```
+    You should not generate long code. You should generate correct indent spaces so that the code can run correctly when replacing the <MASK> with the completed code. 
+  # You should respond in the following json format wrapped with markdown quotes:
+  # ```json
+  # {
+  #     "text": "your thought",
+  #     "reasoning": "your reasoning",
+  #     "criticism": "constructive self-criticism",
+  #     "code": "the final code completion",
+  # }
+  # ```
+
+  # Respond only the json, and nothing else. Make sure it can be directly parsed with Python `json.loads`.
+
+name: pipeline
+
+
+environment:
+  env_type: coderagent-basic
+  max_turn: *max_turn
+  rule:
+    planning:
+      type: multimasking
+      cnt_agents: *cnt_agents
+    code_completion:
+      type: rag_with_debug
+      retrieval_folder_path: /gpfs/gibbs/pi/gerstein/xt86/coderagent/AgentVerse/agentverse/cache/retrieval/sim_assign1/gt
+      retrieval_file_path: /gpfs/gibbs/pi/gerstein/xt86/coderagent/AgentVerse/agentverse/datasets/sim_strategy_smaller/singleGen_sim_line1_ws30_leaveout1.jsonl
+      retrieval_mode: gt
+      completion_max_turn: 3
+
+agents:
+  - #navigator_agent:
+    agent_type: navigator
+    name: Navigator
+    prepend_prompt_template: *navigator_planning_prepend_prompt
+    append_prompt_template: *navigator_planning_append_prompt
+    planning_prepend_prompt_template: *navigator_planning_prepend_prompt
+    planning_append_prompt_template: *navigator_planning_append_prompt
+    critic_prepend_prompt_template: *navigator_critic_prepend_prompt
+    critic_append_prompt_template: *navigator_critic_append_prompt
+    max_retry: 10
+    memory:
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-35-turbo
+      model: "gpt-35-turbo"
+      temperature: 0
+      max_tokens: 2048
+    output_parser:
+      type: dummy
+
+  - #driver_agent:
+    agent_type: driver
+    name: Driver
+    prepend_prompt_template: *driver_prepend_prompt
+    append_prompt_template: *driver_append_prompt
+    max_retry: 10
+    memory:
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-35-turbo
+      model: "gpt-35-turbo"
+      temperature: 0
+      max_tokens: 2048
+    output_parser:
+      type: dummy
+      # stop:
+      #   - "\ndef "
+      #   - "\nclass "
+      #   - "\nif "
+      #   - "\n\n#"

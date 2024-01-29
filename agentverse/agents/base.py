@@ -6,7 +6,7 @@ from string import Template
 from pydantic import BaseModel, Field
 from agentverse.llms import BaseLLM
 
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 from agentverse.llms.utils import count_string_tokens
 from agentverse.memory import BaseMemory, ChatHistoryMemory
 from agentverse.message import Message
@@ -64,7 +64,7 @@ class BaseAgent(BaseModel):
             **kwargs
         )
         append_prompt = Template(self.append_prompt_template).safe_substitute(**kwargs)
-
+        print(append_prompt)
         # TODO: self.llm.args.model is not generalizable
         num_prepend_prompt_token = count_string_tokens(
             prepend_prompt, self.llm.args.model

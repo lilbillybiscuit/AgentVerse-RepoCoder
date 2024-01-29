@@ -1,7 +1,7 @@
 import asyncio
 
 # import logging
-from agentverse.logging import get_logger
+from agentverse.logging_ import get_logger
 from typing import Any, Dict, List
 
 # from agentverse.agents.agent import Agent

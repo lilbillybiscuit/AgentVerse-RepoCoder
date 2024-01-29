@@ -10,7 +10,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from pydantic import BaseModel, Field
 
 from agentverse.llms.base import LLMResult
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 from agentverse.message import Message
 
 from . import llm_registry, LOCAL_LLMS
@@ -157,6 +157,7 @@ class OpenAIChat(BaseChatModel):
                     functions=functions,
                     **self.args.dict(),
                 )
+                print(response)
                 if response["choices"][0]["message"].get("function_call") is not None:
                     self.collect_metrics(response)
                     return LLMResult(
@@ -195,6 +196,7 @@ class OpenAIChat(BaseChatModel):
                     total_tokens=response["usage"]["total_tokens"],
                 )
         except (OpenAIError, KeyboardInterrupt, json.decoder.JSONDecodeError) as error:
+            print(error)
             raise
 
     @retry(
@@ -211,16 +213,19 @@ class OpenAIChat(BaseChatModel):
     ) -> LLMResult:
         messages = self.construct_messages(prepend_prompt, history, append_prompt)
         logger.log_prompt(messages)
-
+        print(self.args.dict())
         try:
+            print('try 1')
             if functions != []:
                 async with ClientSession(trust_env=True) as session:
                     openai.aiosession.set(session)
                     response = await openai.ChatCompletion.acreate(
                         messages=messages,
+                        engine=self.args['model'],
                         functions=functions,
                         **self.args.dict(),
                     )
+                print('try 2')
                 if response["choices"][0]["message"].get("function_call") is not None:
                     function_name = response["choices"][0]["message"]["function_call"][
                         "name"
@@ -282,12 +287,20 @@ class OpenAIChat(BaseChatModel):
                     )
 
             else:
-                async with ClientSession(trust_env=True) as session:
-                    openai.aiosession.set(session)
-                    response = await openai.ChatCompletion.acreate(
+                print('try 3')
+                response = openai.ChatCompletion.create(
                         messages=messages,
+                        engine=self.args.model,
                         **self.args.dict(),
                     )
+                #async with ClientSession(trust_env=True) as session:
+                #    openai.aiosession.set(session)
+                    #response = await openai.ChatCompletion.acreate(
+                    #    messages=messages,
+                    #    engine=self.args['model'],
+                    #    **self.args.dict(),
+                    #)
+                print('try 4')
                 self.collect_metrics(response)
                 return LLMResult(
                     content=response["choices"][0]["message"]["content"],
@@ -296,6 +309,7 @@ class OpenAIChat(BaseChatModel):
                     total_tokens=response["usage"]["total_tokens"],
                 )
         except (OpenAIError, KeyboardInterrupt, json.decoder.JSONDecodeError) as error:
+            print(error)
             raise
 
     def construct_messages(

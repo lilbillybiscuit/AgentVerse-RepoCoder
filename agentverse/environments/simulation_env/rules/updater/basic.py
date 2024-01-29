@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, List, Tuple
 from . import updater_registry as UpdaterRegistry
 from .base import BaseUpdater
 from agentverse.message import Message
-from agentverse.logging import get_logger
+from agentverse.logging_ import get_logger
 
 if TYPE_CHECKING:
     from agentverse.environments import BaseEnvironment

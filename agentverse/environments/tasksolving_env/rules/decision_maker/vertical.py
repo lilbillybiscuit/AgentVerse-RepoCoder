@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, List
 
 from . import decision_maker_registry
 from .base import BaseDecisionMaker
-from agentverse.logging import typewriter_log, logger
+from agentverse.logging_ import typewriter_log, logger
 
 if TYPE_CHECKING:
     from agentverse.agents import BaseAgent, SolverAgent, CriticAgent

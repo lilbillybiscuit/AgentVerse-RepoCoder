@@ -4,7 +4,7 @@ import os
 from typing import Dict, List, TYPE_CHECKING
 
 import yaml
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 
 try:
     from bmtools.agent.singletool import import_all_apis, load_single_tools

@@ -6,7 +6,6 @@ import re
 import time
 import json
 import abc
-from logging import LogRecord
 from typing import Any, List
 
 from colorama import Fore, Style
@@ -253,7 +252,7 @@ class AutoGptFormatter(logging.Formatter):
     To use this formatter, make sure to pass 'color', 'title' as log extras.
     """
 
-    def format(self, record: LogRecord) -> str:
+    def format(self, record) -> str:
         if hasattr(record, "color"):
             record.title_color = (
                 getattr(record, "color")

@@ -6,7 +6,7 @@ import datetime
 
 from pydantic import Field
 
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 from agentverse.environments import env_registry as EnvironmentRegistry
 from agentverse.agents.simulation_agent.conversation import BaseAgent
 

@@ -14,7 +14,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from agentverse.message import Message
 from agentverse.memory import BaseMemory
 
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 
 from . import memory_manipulator_registry
 from .base import BaseMemoryManipulator

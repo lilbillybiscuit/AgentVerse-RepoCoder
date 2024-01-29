@@ -6,7 +6,7 @@ from colorama import Fore
 
 from agentverse.environments import BaseEnvironment
 from agentverse.agents.base import BaseAgent
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 from agentverse.message import Message, SolverMessage, ExecutorMessage
 
 

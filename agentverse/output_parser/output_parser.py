@@ -10,7 +10,7 @@ from . import output_parser_registry
 from agentverse.utils import AgentAction, AgentFinish, AgentCriticism
 
 from agentverse.llms import LLMResult
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 
 from pydantic import BaseModel
 

@@ -33,3 +33,9 @@ class EvaluatorMessage(Message):
 
 class RoleAssignerMessage(Message):
     pass
+
+class NavigatorMessage(Message):
+    pass
+
+class DriverMessage(Message):
+    pass

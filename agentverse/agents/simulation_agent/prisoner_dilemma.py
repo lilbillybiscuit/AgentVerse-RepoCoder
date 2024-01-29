@@ -4,7 +4,7 @@ from string import Template
 from typing import TYPE_CHECKING, List
 
 from agentverse.message import Message
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 
 # from . import agent_registry
 # from .base import BaseAgent

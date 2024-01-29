@@ -8,7 +8,7 @@ from pydantic import Field
 from agentverse.memory import BaseMemory, ChatHistoryMemory
 from agentverse.message import Message
 from agentverse.utils import AgentAction, AgentFinish
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 
 # from . import agent_registry
 # from .base import BaseAgent

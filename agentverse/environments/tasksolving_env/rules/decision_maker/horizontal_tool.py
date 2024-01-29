@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, List
 
 from . import decision_maker_registry
 from .base import BaseDecisionMaker
-from agentverse.logging import logger
+from agentverse.logging_ import logger
 from agentverse.message import SolverMessage, Message
 
 if TYPE_CHECKING:
